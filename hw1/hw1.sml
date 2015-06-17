@@ -37,7 +37,12 @@ fun dates_in_months (dates : (int*int*int) list, months: int list) =
     if null months
     then []
     else
-	if null dates_in_month(dates, hd months)
-	then dates_in_months(dates, hd (tl months))
-	else
+	let val hd_list = dates_in_month(dates, hd months)
+	    val tl_list = dates_in_months(dates, tl months)
+	in if null hd_list
+	   then tl_list
+	   else revAppend (hd_list, tl_list)
+	end
+	    
+
 	    
