@@ -57,24 +57,26 @@ fun date_to_string (date: int*int*int) =
     in valOf(get_nth(months, #2 date)) ^ " " ^  Int.toString(#3 date) ^ ", " ^ Int.toString(#1 date)
     end
 
-fun number_before_reaching_sum (sum : int, list: int list) =
+fun number_before_reaching_sum (sum : int, list : int list) =
     if null list
     then 0
     else
-	let fun sum_list (upto: int) =
+	let fun sum_index (my_sum : int, my_list : int list, index : int) =
 		if null list
 		then 0
-		else if null (tl list) orelse upto=1
-		then hd list
-		else hd list + sum_list(upto-1)
-	    val nth = 1;
-
-	in
-	    if sum_list(nth)>sum
-	    then 0
-	    else nth + sum_list(nth+1)
+		else if (hd my_list) > my_sum
+		then index
+		else sum_index(my_sum-(hd my_list), tl my_list, index+1)
+	in sum_index(sum, list, 0)
 	end
-	    
+
+
+fun what_month (day : int) =
+    let val months = [31,28,31,30,31,30,31,31,30,31,30,31]
+    in number_before_reaching_sum(day, months)
+    end
+	
+	
 		
 	
 
