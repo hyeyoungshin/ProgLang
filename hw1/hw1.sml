@@ -82,6 +82,46 @@ fun month_range (day1 : int, day2 : int) =
     else if day1=day2
     then [what_month(day1)]
     else what_month(day1) :: month_range(day1+1, day2)
+
+fun oldest (dates: (int*int*int) list) : (int*int*int) option =
+    if null dates
+    then NONE
+    else if null tl dates
+    then SOME (hd dates)
+    else
+	let 
+	    fun older (date1: (int*int*int), date2: (int*int*int)) : (int*int*int)  =
+		if #1 date1 < #1 date2
+		then date1
+		else if #1 date1 = #1 date2
+		then
+		    if #2 date1 < #2 date2
+		    then date1
+		    else if #2 date1 = #2 date2
+		    then
+			if #3 date1 < #3 date2
+			then date1
+		        else date2
+		    else date2
+		else date2
+
+	    fun oldest_aux (dates: (int*int*int), index : int) : (int*int*int) =
+		if index = 1
+		then hd dates
+		else 
+
+            val older_of_two = older(hd dates, hd (tl dates))
+	in if older_of_two = hd datesoldest(older_of_two, hd (tl dates))
+	end
+	    
+						
+			   
+		
+		
+
+
+	    
+    
     
 		
 	
