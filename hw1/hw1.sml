@@ -86,7 +86,7 @@ fun month_range (day1 : int, day2 : int) =
 fun oldest (dates: (int*int*int) list) : (int*int*int) option =
     if null dates
     then NONE
-    else if null tl dates
+    else if null (tl dates)
     then SOME (hd dates)
     else
 	let 
@@ -105,29 +105,7 @@ fun oldest (dates: (int*int*int) list) : (int*int*int) option =
 		    else date2
 		else date2
 
-	    fun oldest_aux (dates: (int*int*int), index : int) : (int*int*int) =
-		if index = 1
-		then hd dates
-		else 
-
-            val older_of_two = older(hd dates, hd (tl dates))
-	in if older_of_two = hd datesoldest(older_of_two, hd (tl dates))
+	in
+	    SOME (older(hd dates, valOf (oldest(tl dates))))
 	end
-	    
-						
-			   
-		
-		
-
-
-	    
-    
-    
-		
-	
-
-
-	
-	
-
-	    
+					
