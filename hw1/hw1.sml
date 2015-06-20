@@ -64,10 +64,10 @@ fun number_before_reaching_sum (sum : int, list : int list) =
 	let fun sum_index (my_sum : int, my_list : int list, index : int) =
 		if null list
 		then 0
-		else if (hd my_list) > my_sum
+		else if (hd my_list) >= my_sum
 		then index
 		else sum_index(my_sum-(hd my_list), tl my_list, index+1)
-	in sum_index(sum, list, 0)
+	in sum_index(sum, list, 1)
 	end
 
 
@@ -76,7 +76,13 @@ fun what_month (day : int) =
     in number_before_reaching_sum(day, months)
     end
 	
-	
+fun month_range (day1 : int, day2 : int) =
+    if day1 > day2
+    then []
+    else if day1=day2
+    then [what_month(day1)]
+    else what_month(day1) :: month_range(day1+1, day2)
+    
 		
 	
 
