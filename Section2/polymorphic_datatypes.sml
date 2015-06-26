@@ -34,4 +34,9 @@ fun sum_leaves tr =
     case tr of
 	Leaf i => i
      | Node(i,lft,rgt) => sum_leaves lft + sum_leaves rgt
-						      
+
+(* type is ('a,'b) tree -> int *)
+fun num_leaves tr =
+    case tr of
+	Leaf i => 1
+     | Node(i,lft,rgt) => num_leaves lft + num_leaves rgt 
