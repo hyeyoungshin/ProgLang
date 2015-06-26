@@ -40,3 +40,11 @@ fun num_leaves tr =
     case tr of
 	Leaf i => 1
      | Node(i,lft,rgt) => num_leaves lft + num_leaves rgt 
+
+(* This is a binary tree which holds no data on the internal nodes, as Node simply contains two flowers, and no data itself, and has two different types of leaves (leaves and petals), each of which hold a different type of data. *)
+datatype ('a,'b) flower =
+	 Node of ('a,'b) flower * ('a,'b) flower
+	 | Leaf of 'a
+	 | Petal of 'b
+			
+					 
