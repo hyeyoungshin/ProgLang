@@ -19,6 +19,12 @@ val c2 : suit * rank = (Heart, Ace)
 val c3 = (Spade, Ace)
 
 (* can call is_Queen_of_Spades with any of c1, c2, c3 *)
-    
 
+(* once we learn more pattern-matching. we can leave the type off function arguments too *)
+fun is_Queen_of_Spades2 c =
+    case c of
+	(Spade, Queen) => true
+      | _  => false
+
+(* REPL prints either Card or (suit * rank) *)
 					  
