@@ -127,6 +127,13 @@
 
 - Cons constant-time (and fast), so accumulator version much better
 
+ *)
+
+
+
+(* Append operator @ always copies the first list -> how append works whether tail recursive or not
 *)
+
+
 
  
