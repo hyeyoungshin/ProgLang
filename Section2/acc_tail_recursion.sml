@@ -50,3 +50,83 @@
  
 
  *)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(* And another
+
+                                 fun rev xs =
+                                    case xs of
+                                 	[] => []
+                                      | x::xs' => (rev xs') @ [x]
+
+
+				 fun rev xs =
+                                     let fun aux(xs, acc) =
+                                 	     case xs of
+                                 		 [] => []
+					       | x::xs' => acc(xs', x::acc)
+				     in
+					 aux(xs, [])
+				     end
+	
+ *)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(* Actually much better:
+
+
+                                    fun rev xs =
+                                       case xs of
+                                            [] => []
+                                          | x:xs' => (rev xs) @ [x]
+
+
+
+- For fact and sum, tail-recursion is faster but both ways linear time
+
+- Non-tail recursive rev is quadratic because each recursive call uses append, which must traverse the first list
+ - And 1+2+..l+(length-1) is almost length*length/2
+ - Moral: beware list-append, especially within outer recursion
+
+- Cons constant-time (and fast), so accumulator version much better
+
+*)
+
+ 
