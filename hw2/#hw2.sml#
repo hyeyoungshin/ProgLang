@@ -1,0 +1,4 @@
+(* You will write 11 SML functions, 4 related to "name substitutions" and 7 related to a made-up solitaire card game.
+
+Your solutions must use pattern-matching. You may not use the functions null, hd, tl, isSome, or valOf, nor may you use anything containing a # characteror features not used in class (such as mutation). Note that list order does not matter unless specifically stated in the problem.
+
