@@ -8,16 +8,24 @@ fun same_string(s1 : string, s2 : string) =
 
 (* put your solutions for problem 1 here *)
 
-fun all_except_option (s, ss) : string list option =
-    let fun aux (x, xs) : string list =
+fun all_except_option (s,ss) : string list option =
+    let fun aux (x,xs) : string list =
 	    case xs of
 		[] => []
 	      | y::ys => if same_string(x, y) then ys else y::aux(x,ys)
-    in	val ans = aux(s, ss)
-	     case ans of
-		 [] => NONE
-	      | x::xs => SOME x::xs 
+
+	val ans = aux(s,ss)
+
+    in case ans of
+	   [] => NONE
+	 | x::xs => SOME(x::xs)
+   (* in if aux(s,ss)=[] then NONE else SOME(aux(s,ss)) *)
     end
+
+fun get_substitutions1 (slstlst, s) : string list =
+    
+    
+
 	
 		      
 			  
