@@ -143,12 +143,12 @@ The objective is to end the game with a low score (0 is best). Scoring works as 
 
 *)
 
-fun card_color suit : color = 
-    case suit of
-	Clubs => Black
-      | Diamonds => Red
-      | Hearts => Red
-      | Spades => Black
+fun card_color card : color = 
+    case card of
+	(Clubs,_) => Black
+      | (Diamonds,_) => Red
+      | (Hearts,_) => Red
+      | (Spades,_) => Black
 
 
 (*
@@ -157,10 +157,10 @@ fun card_color suit : color =
 
 *)
 
-fun card_value rank : int =
-    case rank of
-	Num i => i
-      | Ace => 11
+fun card_value card : int =
+    case card of
+	(_,Num i) => i
+      | (_,Ace) => 11
       | _ => 10
 
 (*
@@ -169,7 +169,7 @@ fun card_value rank : int =
 
 *)
 
-fun remove_card (cs, c, e) : card list =
+fun remove_card (cs: card list, c: card, e: exn) : card list =
     let fun leng lst : int =
 	    case lst of
 		[] => 0
@@ -192,7 +192,21 @@ fun remove_card (cs, c, e) : card list =
 
 *)
 
-																												     fun all_same_color cardLst =
-																													 
+fun all_same_color (cardlst: card list) : bool =
+    case cardlst of
+	[] => true
+      | x::[] => true
+      | y::(z::tl) => let val col1 = card_color y
+		          val col2 = card_color z
+			      in
+				  case tl of
+				      [] => true
+				    | x::[] => col1 = card_color x
+				    | p::(q::tl) => if col1 = col2
+						    then all_same_color tl
+						    else false
+			      end
+				  
+					      
 						   
 																					     
