@@ -44,18 +44,50 @@ fun get_substitutions1 (sub, s) : string list =
      case sub of
 	[] => []
       | x::xs => case all_except_option(s, x) of
-	    NONE => [] @ get_substitutions1(xs,s)
-	  | SOME(y::ys) => y::ys @ get_substitutions1(xs,s)
+	    NONE => [] @ get_substitutions1(xs, s)
+	  | SOME(y::ys) => y::ys @ get_substitutions1(xs, s)
 
 
-(* Write a function get_substitutions2, which is like get_substitutions1 exce[t it uses a tail-recursive local helper function. *)
-fun get_substitutions2 (sub, s) : string list =
+(* Write a function get_substitutions2, which is like get_substitutions1 except it uses a tail-recursive local helper function. *)
+fun get_substitutions2 (sub, s) =
     let fun aux(lst, acc) =
 	    case lst of
 		[] => acc
-		   | x::xs => aux(xs, all_except_option(s,x)::acc) 
+	      | x::xs => case all_except_option(s, x) of
+			     NONE => aux(xs, acc)
+			   | SOME(y::ys) => aux(xs, acc @ (y::ys)) 
     in aux(sub, [])
     end
+
+(* Write a function similar_names, which takes a string list list of substitutions (as in parts (b) and (c)) and a full name of type {first:string,middle:string,last:string} and returns a list of full names (type {first:string,middle:string,last:string} list). The result is all the full names you can produce by substituting for the first name (and only the first name) using substitutions and parts (b) or (c). The answer should begin with the original name (then have 0 or more other names). 
+
+Example:
+ similar_names([["Fred","Fredrick"],["Elizabeth","Betty"],["Freddie","Fred","F"]], {first="Fred", middle="W", last="Smith"})
+
+Answer: [{first="Fred", last="Smith", middle="W"}, {first="Fredrick", last="Smith", middle="W"},
+{first="Freddie", last="Smith", middle="W"}, {first="F", last="Smith", middle="W"}] 
+
+Do not eliminate duplicates from the answer. Hint: Use a local helper function. Sample solution is around 10 lines. 
+*)
+fun similar_names (sub, full_name) =
+    let val {first=x, middle=y, last=z} = full_name
+	fun make_names (first, acc) =
+	    case first of
+		[] => acc
+	      | s::ss => make_names(ss, {first=s, middle=y, last=z}::acc)
+
+	fun rev (lst, acc) =
+	    case lst of
+		[] => acc
+	      | b::bs => rev(bs, b::acc)
+				 
+    in
+	rev(make_names(get_substitutions1(sub, x), [full_name]),[])
+    end
+	
+			     
+		
+							       
 	
     
 
