@@ -44,19 +44,33 @@ fun dates_in_months (dates : (int*int*int) list, months: int list) =
 	   else revAppend (hd_list, tl_list)
 	end
 
-fun get_nth (st_list: string list, n : int) =
+(* ERROR: the return type of get_nth should be string (not string option) *)
+fun get_nth_old (st_list: string list, n : int) =
     if null st_list
     then NONE
     else
 	if n=1
 	then SOME (hd st_list)
-	else get_nth(tl st_list, n-1)
+	else get_nth_old(tl st_list, n-1)
+
+(* Adding corrected version of get_nth so I can test the other functions *)
+fun get_nth (st_list: string list, n : int) : string =
+    if n=1
+    then (hd st_list)
+    else get_nth(tl st_list, n-1)
 
 fun date_to_string (date: int*int*int) =
     let val months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    in valOf(get_nth(months, #2 date)) ^ " " ^  Int.toString(#3 date) ^ ", " ^ Int.toString(#1 date)
+    (* in valOf(get_nth(months, #2 date)) ^ " " ^  Int.toString(#3 date) ^ ", " ^ Int.toString(#1 date) *)
+    (* don't need valOf because get_nth is no longer returning an option *)
+    in get_nth(months, #2 date) ^ " " ^  Int.toString(#3 date) ^ ", " ^ Int.toString(#1 date)
     end
 
+(* There's still a problem with number_before_reaching_sum.
+Try the test in hw1test.sml file:
+    number_before_reaching_sum(10, [1,2,3,4,5]);
+(You should get 3, not 4.)
+ *)
 fun number_before_reaching_sum (sum : int, list : int list) =
     if null list
     then 0
