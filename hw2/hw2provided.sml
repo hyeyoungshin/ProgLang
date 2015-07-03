@@ -14,16 +14,34 @@ fun all_except_option (s,ss) : string list option =
 		[] => []
 	      | y::ys => if same_string(x, y) then ys else y::aux(x,ys)
 
+	fun length xs : int =
+	    case xs of
+		[] => 0
+	      | x::xs' => 1 + length xs'
+				     
 	val ans = aux(s,ss)
 
     in case ans of
 	   [] => NONE
-	 | x::xs => SOME(x::xs)
+	 | x::xs => if length(ss)=length(ans) then NONE else SOME(x::xs)
    (* in if aux(s,ss)=[] then NONE else SOME(aux(s,ss)) *)
     end
 
-fun get_substitutions1 (slstlst, s) : string list =
+fun get_substitutions1 (sub, s) : string list =
+     case sub of
+	[] => []
+      | x::xs => case all_except_option(s, x) of
+	    NONE => [] @ get_substitutions1(xs,s)
+	  | SOME(y::ys) => y::ys @ get_substitutions1(xs,s)
+
+						     
     
+
+
+
+
+
+
     
 
 	
