@@ -207,6 +207,22 @@ fun all_same_color (cardlst: card list) : bool =
 						    else false
 			      end
 				  
-					      
+
+(*
+
+(e) Wrtie a function sum_cards, which takes a list of cards and returns the sum of their values. Use a locally defined helper function that is tail recursive. (Take "calls use a constant amount of stack space" as a requirement for this problem.)
+
+*)
+
+ fun sum_cards (cardlst: card list) : int =
+     let fun sum (lst: card list, acc: int) : int =
+	     case lst of
+		 [] => acc
+	       | x::xs => sum (xs, (card_value x) + acc)
+     in sum(cardlst, 0)
+     end
+	 
+ 
+											 
 						   
 																					     
