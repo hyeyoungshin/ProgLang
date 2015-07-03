@@ -9,11 +9,18 @@ fun same_string(s1 : string, s2 : string) =
 (* put your solutions for problem 1 here *)
 
 fun all_except_option (s, ss) : string list option =
-    case ss of
-	[] => NONE
-      | x::xs' => if same_string(s, x)
-		  then SOME xs'
-		  else x::all_except_option(s, xs')
+    let fun aux (x, xs) : string list =
+	    case xs of
+		[] => []
+	      | y::ys => if same_string(x, y) then ys else y::aux(x,ys)
+    in	val ans = aux(s, ss)
+	     case ans of
+		 [] => NONE
+	      | x::xs => SOME x::xs 
+    end
+	
+		      
+			  
 
 
 
