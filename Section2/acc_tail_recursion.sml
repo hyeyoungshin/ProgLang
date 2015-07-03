@@ -115,7 +115,7 @@
                                     fun rev xs =
                                        case xs of
                                             [] => []
-                                          | x:xs' => (rev xs) @ [x]
+                                          | x::xs' => (rev xs) @ [x]
 
 
 
