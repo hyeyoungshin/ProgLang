@@ -44,6 +44,7 @@ fun dates_in_months (dates : (int*int*int) list, months: int list) =
 	   else revAppend (hd_list, tl_list)
 	end
 
+(* ERROR: the return type of get_nth should be string (not string option) *)
 fun get_nth (st_list: string list, n : int) =
     if null st_list
     then NONE
