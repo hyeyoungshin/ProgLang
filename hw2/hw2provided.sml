@@ -221,8 +221,60 @@ fun all_same_color (cardlst: card list) : bool =
 	       | x::xs => sum (xs, (card_value x) + acc)
      in sum(cardlst, 0)
      end
-	 
- 
+
+
+(*
+
+(f) Write a function score, which takes a card list (the held-cards) and an int (the goal) and computes the score as described above.
+
+*)
+
+fun score (cardlst: card list, goal: int) : int =
+    let val sum = sum_cards cardlst
+
+	fun div_score (scor: int) : int =
+	    if all_same_color cardlst
+	    then scor div 2
+	    else scor
+    in
+	if sum > goal
+        then div_score(3 * (sum - goal))
+	else div_score(goal - sum)
+    end
+
+
+(*
+
+Write a function officiate, which “runs a game.” It takes a card list (the card-list) a move list
+(what the player “does” at each point), and an int (the goal) and returns the score at the end of the game after processing (some or all of) the moves in the move list in order. Use a locally defined recursive helper function that takes several arguments that together represent the current state of the game. As described above:
+
+• The game starts with the held-cards being the empty list.
+• The game ends if there are no more moves. (The player chose to stop since the move list is empty.)
+• If the player discards some card c, play continues (i.e., make a recursive call) with the held-cards not having c and the card-list unchanged. If c is not in the held-cards, raise the IllegalMove exception.
+• If the player draws and the card-list is (already) empty, the game is over. Else if drawing causes the sum of the held-cards to exceed the goal, the game is over (after drawing). Else play continues with a larger held-cards and a smaller card-list.
+
+Sample solution for (g) is under 20 lines.
+
+*)
+
+fun officiate (cardlst: card list, movelst: move list, goal: int) : int =
+    let play(heldlst: card list, move: move list, e: exn) : int =
+	case move of
+	    [] => sum_cards heldlst
+	  | x::xs => if x = Discard of 
+
+			Draw
+		     then case cardlst of
+			      [] => sum_cards heldlsf
+			    | y::ys => y::heldlst
+		     else case heldlst of
+			      [] => raise e
+			   |  => 
+			 
+
+
+	
+			
 											 
 						   
 																					     
