@@ -34,7 +34,7 @@ fun all_except_option (s,ss) : string list option =
 	val ans = aux(s,ss)
 
     in case ans of
-	   [] => NONE
+	   [] => SOME []
 	 | x::xs => if length(ss)=length(ans) then NONE else SOME(x::xs)
     end
 
@@ -59,8 +59,9 @@ fun get_substitutions1 (sub, s) : string list =
      case sub of
 	[] => []
       | x::xs => case all_except_option(s, x) of
-	    NONE => [] @ get_substitutions1(xs, s)
-	  | SOME(y::ys) => y::ys @ get_substitutions1(xs, s)
+		     NONE => get_substitutions1(xs, s)
+		   | SOME([]) => get_substitutions1(xs, s)
+		   | SOME(y::ys) => y::ys @ get_substitutions1(xs, s)
 
 
 (* 
@@ -75,6 +76,7 @@ fun get_substitutions2 (sub, s) =
 		[] => acc
 	      | x::xs => case all_except_option(s, x) of
 			     NONE => aux(xs, acc)
+			   | SOME([]) => aux(xs, acc)
 			   | SOME(y::ys) => aux(xs, acc @ (y::ys)) 
     in aux(sub, [])
     end
@@ -177,12 +179,12 @@ fun remove_card (cs: card list, c: card, e: exn) : card list =
 
     in
 	case cs of
-	[] => raise e
-	 | x::xs => if x = c
-		    then if leng xs = leng cs
-			 then raise e
-			 else xs
-		    else remove_card (xs, c, e)
+	    [] => raise e
+	  | x::xs => if x = c
+		     then if leng xs = leng cs
+			  then raise e
+			  else xs
+		     else remove_card (xs, c, e)
     end
 
 
@@ -196,17 +198,23 @@ fun all_same_color (cardlst: card list) : bool =
     case cardlst of
 	[] => true
       | x::[] => true
-      | y::(z::tl) => let val col1 = card_color y
+      | y::ys => (all_same_color ys) andalso case ys of
+						 z::zs => card_color y = card_color z
+					       | _ => true
+							  
+    
+	(*
+			  let val col1 = card_color y
 		          val col2 = card_color z
-			      in
-				  case tl of
-				      [] => true
-				    | x::[] => col1 = card_color x
-				    | p::(q::tl) => if col1 = col2
-						    then all_same_color tl
-						    else false
-			      end
-				  
+		      in
+			  if col1=col2
+		          then case tl of
+				   [] => true
+				 | x::[] => col1 = card_color x
+				 | p::ps => col1 = p andalso all_same_color ps
+			  else false
+		      end
+	*)			  
 
 (*
 
@@ -257,19 +265,23 @@ Sample solution for (g) is under 20 lines.
 
 *)
 
-fun officiate (cardlst: card list, movelst: move list, goal: int) : int =
-    let play(heldlst: card list, move: move list, e: exn) : int =
-	case move of
-	    [] => sum_cards heldlst
-	  | x::xs => if x = Discard of 
 
-			Draw
-		     then case cardlst of
-			      [] => sum_cards heldlsf
-			    | y::ys => y::heldlst
-		     else case heldlst of
-			      [] => raise e
-			   |  => 
+fun officiate (cardlst: card list, movelst: move list, goal: int) : int =
+    let fun play(heldlst: card list, stack: card list, move: move list, e: exn) : int =
+	case move of
+	    [] => score (heldlst, goal) (* Game over *)
+	  | x::xs => case x of
+			 Discard c => play (remove_card (heldlst, c, e), stack, xs, e)
+		       | Draw => case stack of
+				     [] => score (heldlst, goal) (* Game over *)
+				   | y::ys => if sum_cards(y::heldlst) > goal
+					      then score (y::heldlst, goal)
+					      else play(y::heldlst, ys, xs, e)
+    in play([], cardlst, movelst, IllegalMove)
+    end
+
+	
+
 			 
 
 
