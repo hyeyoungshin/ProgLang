@@ -202,7 +202,6 @@ fun all_same_color (cardlst: card list) : bool =
 						 z::zs => card_color y = card_color z
 					       | _ => true
 							  
-    
 	(*
 			  let val col1 = card_color y
 		          val col2 = card_color z
