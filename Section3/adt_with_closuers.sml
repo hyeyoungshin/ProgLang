@@ -26,7 +26,7 @@
 *)
 
 datatype set = S of { insert : int -> set,  (* so that we can use set recursively *)
-		      `member : int -> bool,
+		      member : int -> bool,
 		      size : unit -> int }
 
 (* we don't know how this set is implemented, but we do know its type 
