@@ -21,8 +21,8 @@
 
 
 (* type set = { insert : int -> set,   (* type synonyms are not recursive *)
-	     member : int -> bool,
-	     size : unit -> int }
+         	member : int -> bool,
+	        size : unit -> int }
 *)
 
 datatype set = S of { insert : int -> set,  (* so that we can use set recursively *)
