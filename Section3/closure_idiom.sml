@@ -44,12 +44,7 @@ fun sqrt_of_abs i = (Math.sqrt o Real.fromInt o abs) i (* => unnecessary functio
 val sqrt_of_abs = Math.sqrt o Real.fromInt o abs (* More clear and direct *)
 
 
-(* |> !>*)
-infix !>
 
-fun x !> f = f x
-
-fun sqrt_of_abs i = i !> abs !> Real.fromInt !> Math.sqrt
 		      
 
 
@@ -79,25 +74,30 @@ fun sqrt_of_abs i = i !> abs !> Real.fromInt !> Math.sqrt
   - This one is very popular (and predefined) in F#
 
                 infix |>
-                FUN X |> F = F X
+                fun x |> f = f x
 
-                FUN SQRT_OF_ABS I = 
-                   I |> ABS |> REAL.FROMINT |> MATH.SQRT   
+                fun sqrt_of_abs i = 
+                   i |> abs |> Real.fromInt |> Math.sqrt   
 
  *)
 
 
-(* VAL BACKUP1 = FN : ('A -> 'B OPTION) * ('A -> 'B) -> 'A -> 'B *)
-FUN BACKUP1 (F,G) = FN X => CASE F X OF
-				NONE => G X
-			      | SOME Y => Y
+(* val backup1 = fn : ('a -> 'b option) * ('a -> 'b) -> 'a -> 'b *)
+fun backup1 (f,g) = fn x => case f x of
+				NONE => g x
+			      | SOME y => y
 
 (* val backup2 = fn : ('a -> 'b) * ('a -> 'b) -> 'a -> 'b *)x
 fun backup2 (f,g) = fn x => f x handle _ => g x					      
 
 					      
     
+(* |> !>*)
+infix !>
 
+fun x !> f = f x
+
+fun sqrt_of_abs i = i !> abs !> Real.fromInt !> Math.sqrt
 
 						 
 		
