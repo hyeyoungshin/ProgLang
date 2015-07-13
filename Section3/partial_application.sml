@@ -24,7 +24,7 @@ fun fold f acc xs =
 (* If a curried function is applied to "too few" arguments, that returns, a powerful idiom, which is often useful. *)
 
 val is_nonnegative = sorted3 0 0
-val sum = fold (fn (x,y) => x+Y) 0
+val sum = fold (fn (x,y) => x+y) 0
 
 	       
 (* In fact, not doing this is often a harder-to-notice version of unnecessary function wrapping, as in these inferior versions. *)
