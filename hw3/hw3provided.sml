@@ -45,9 +45,9 @@ fun only_capitals xs =
 
 
 		
-(* 2. Takes a string list and returns the longest string in the list. If the list is empty, return " ". In the case of a tie, return the string closest to the beginning of the list. Use foldl, String.size, and no recursion (other than the implementation of foldl *) 
+(* 2. Takes a string list and returns the longest string in the list. If the list is empty, return "". In the case of a tie, return the string closest to the beginning of the list. Use foldl, String.size, and no recursion (other than the implementation of foldl *) 
 fun longest_string1 xs =
-    foldl (fn (x,y) => if String.size x > String.size y then x else y) " " xs
+    foldl (fn (x,y) => if String.size x > String.size y then x else y) "" xs
 		      
 
 
@@ -55,7 +55,7 @@ fun longest_string1 xs =
 
 (* 3. is exactly like longest_string1 except in the case of ties returns the string cloestest to the end of the list. The solution should be almost an exact copy of longest_string1. Still use foldl and String.size *) 
 fun longest_string2 xs =
-    foldl (fn (x,y) => if String.size x >= String.size y then x else y) " " xs
+    foldl (fn (x,y) => if String.size x >= String.size y then x else y) "" xs
 	  
 
 
@@ -73,7 +73,7 @@ fun longest_string2 xs =
 
  *)
 fun longest_string_helper f xs =
-    foldl f " " xs
+    foldl f "" xs
 
 	  
 val longest_string3 = longest_string_helper (fn (x,y) => if String.size x > String.size y
@@ -103,3 +103,47 @@ val rev_string  = implode o rev o explode
 						
 
 
+
+
+
+(* 7. Write a function first_answer of type ('a -> 'b option) -> 'a list -> 'b (notice the 2 arguments are curried.) The first argument should be applied to elements of the second argument in order until the first time it returns SOME v for some v and then v is the result of the call to first_answer. If the first argument returns NONE for all list elements, then first_answer should raise the exception NoAnswer. Hint: Sample solution is 5 lines and does nothing fancy. *)
+fun first_answer f xs =
+    let
+	val mapped = List.map f xs
+	val only_some = List.filter (fn x => isSome x) mapped 
+    in 
+	if null only_some
+	then raise NoAnswer
+	else valOf(hd only_some) 
+    end
+	
+	
+	  
+
+
+
+
+(* 8. Write a function all_answers of type ('a -> 'b list option) -> 'a list -> 'b list option (notice the 2 arguments are curried.) If it returns NONE for any element, then the result for all_answers is NONE. Else the calls to the first argument will have produced SOME lst1, SOME lst2, ... SOME lstn and the result of all_answers is SOME lst where lst is lst1, lst2, ..., lstn appended together (order doesn't matter). Hint: The sample solution is in 8 lines. It uses a helper function with an accumulator and uses @. Note all_answers f [] should evaluate to SOME []. 
+fun all_answers f xs =
+    let
+        val some_list = only_some f xs
+    in
+	
+
+
+	fun all_answers_aux (f, xs, acc) =
+	case xs of
+	    [] => acc
+	  | x::xs' => if isSome(f x)
+		      then all_answers_aux (f, xs', x@acc) 
+		      else NONE
+    in
+	all_answers_aux(f, xs, SOME [])
+    end
+	
+*)			  
+	       
+	
+				
+	
+	     		      
