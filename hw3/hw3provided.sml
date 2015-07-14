@@ -2,29 +2,6 @@
 
 exception NoAnswer
 
-datatype pattern = Wildcard
-		 | Variable of string
-		 | UnitP
-		 | ConstP of int
-		 | TupleP of pattern list
-		 | ConstructorP of string * pattern
-
-datatype valu = Const of int
-	      | Unit
-	      | Tuple of valu list
-	      | Constructor of string * valu
-
-fun g f1 f2 p =
-    let 
-	val r = g f1 f2 
-    in
-	case p of
-	    Wildcard          => f1 ()
-	  | Variable x        => f2 x
-	  | TupleP ps         => List.foldl (fn (p,i) => (r p) + i) 0 ps
-	  | ConstructorP(_,p) => r p
-	  | _                 => 0
-    end
 
 (**** for the challenge problem only ****)
 
@@ -123,27 +100,154 @@ fun first_answer f xs =
 
 
 
-(* 8. Write a function all_answers of type ('a -> 'b list option) -> 'a list -> 'b list option (notice the 2 arguments are curried.) If it returns NONE for any element, then the result for all_answers is NONE. Else the calls to the first argument will have produced SOME lst1, SOME lst2, ... SOME lstn and the result of all_answers is SOME lst where lst is lst1, lst2, ..., lstn appended together (order doesn't matter). Hint: The sample solution is in 8 lines. It uses a helper function with an accumulator and uses @. Note all_answers f [] should evaluate to SOME []. 
+(* 8. Write a function all_answers of type ('a -> 'b list option) -> 'a list -> 'b list option 
+      (notice the 2 arguments are curried.) If it returns NONE for any element, then the result 
+      for all_answers is NONE. Else the calls to the first argument will have produced 
+      SOME lst1, SOME lst2, ... SOME lstn and the result of all_answers is SOME lst where lst 
+      is lst1, lst2, ..., lstn appended together (order doesn't matter). 
+      Hint: The sample solution is in 8 lines. It uses a helper function with an accumulator 
+      and uses @. Note all_answers f [] should evaluate to SOME []. *) 
 fun all_answers f xs =
-    let
-        val some_list = only_some f xs
-    in
-	
+    if null xs
+    then SOME []
+    else
+	let
+	    fun all_answers_aux (f: 'a -> 'b list option, xs: 'a list, acc: 'b list) : 'b list =
+		case xs of
+		    [] => acc
+		  | x::xs' => case f x of
+				  NONE => []
+				| SOME y => all_answers_aux(f, xs', y @ acc)
+        in
+	    let val ans = all_answers_aux(f, xs, []) 
+	    in	if null ans
+		then NONE
+		else SOME ans
+	    end
+	end
 
 
-	fun all_answers_aux (f, xs, acc) =
-	case xs of
-	    [] => acc
-	  | x::xs' => if isSome(f x)
-		      then all_answers_aux (f, xs', x@acc) 
-		      else NONE
+
+
+
+datatype pattern = Wildcard
+		 | Variable of string
+		 | UnitP
+		 | ConstP of int
+		 | TupleP of pattern list
+		 | ConstructorP of string * pattern
+
+datatype valu = Const of int
+	      | Unit
+	      | Tuple of valu list
+	      | Constructor of string * valu
+
+fun g f1 f2 p =
+    let 
+	val r = g f1 f2 
     in
-	all_answers_aux(f, xs, SOME [])
+	case p of
+	    Wildcard          => f1 ()
+	  | Variable x        => f2 x
+	  | TupleP ps         => List.foldl (fn (p,i) => (r p) + i) 0 ps
+	  | ConstructorP(_,p) => r p
+	  | _                 => 0
     end
+
+(* Given valu v and pattern p, either p matches v or not. If it does, the match produces 
+   a list of string * valu pairs; order in the list does not matter. The rules for matching 
+   should be unsurprising:
+
+   - Wildcard matches everything and produces the empty list of bindings.
+ 
+   - Variable s matches any value v and produces the one-element list holding (s,v)
+  
+   - UnitP matches only Unit and produces the empty list of bindings.
+
+   - ConstP 17 matches only Const 17 and produces the empty list of bindings (and similarly
+     for other integers).
+
+   - TupleP ps matches a value of the form Tuple vs if ps and vs have the same length and
+     and for all i, the ith element of ps matches the ith element of vs. The list of bindings
+     produced is all the lists from the nested pattern matches appended together.
+
+   - ConstructorP(s1,p) matches Constructor(s2,v) if s1 and s2 are the same string (you can
+     compare them with =) and p matches v. The list of bindings produced is the list from 
+     the nested pattern match. We call the string s1 and s2 the constructor name.
+
+   - Nothing else matches.
+
+
+  
+
+
+
+  9. (This problem uses the pattern datatype but is not really about pattern-matching.)
+    
+   (a) Use g to define a function count_wildcards that takes a pattern and returns how 
+       many Wildcard patterns it contains. *)
+ fun count_wildcards p =
+     g (fn x => 1) (fn y => 0) p
+
+
+(* (b) Use g to define a function count_wild_and_variable_lengths that takes a pattern 
+       and returns the number of Wildcard patterns it contains plus the sum of the string 
+       legnths of all the variables in the variable patterns it contains. (Use String.size.
+       We care only about variable names; the constructor names are not relevant.) *)
+
+ fun count_wild_and_variable_lengths p =
+     (count_wildcards p) + (g (fn x => 0) (fn y => String.size y) p)
+
 	
-*)			  
-	       
-	
+			  
+(* (c) Use g to define a function count_some_var that takes a string and a pattern (as
+       a pair) and returns the number of times the string appears as a variable in the 
+       pattern. We care only about variable names; the constructor names are not relevant. *)
+ fun count_some_var (s,p) = 
+     g (fn x => 0) (fn y => if y = s then 1 else 0) p
+
+
+
+
+
+
+
+
+(* 10. takes a pattern and returns true if and only if all the variables appearing in
+       the pattern are distinct from each other (i.e., use different strings). The 
+       constructor names are not relevant. Hints: The sample solution uses two helper 
+       functions. The first takes a pattern and returns a list of all the strings it 
+       uses for variables. Using foldl with a function that uses append is useful in 
+       one case. The second takes a list of strings and decides if it has repeats.
+       List.exists may be useful. Sample solution is 15 lines.                     *)
+ fun check_pat p : bool =
+     let
+	 fun get_string p : string list =
+	     case p of
+	        Variable s => [s]
+	      | TupleP x::xs => foldl (fn (x,acc) => case x of
+						      Variable r => [r] @ acc
+						    | TupleP q::qs => (get_string q) @ acc) [] ps
+	      | _ => []
+
+	 val repeats = List.exists (fn (i,j) => i = j)
+     in
+	 repeats o (get_string p)
+     end
+	 
+
+
+
+
+
+
+ val p = TupleP[TupleP[Variable "x",ConstructorP ("wild",Wildcard)],Variable "x"]
+			    
+
+	 
+			 
+				
+       
 				
 	
 	     		      
