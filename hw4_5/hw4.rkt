@@ -38,6 +38,8 @@
 ;     remainder, car and list-tail are all useful - see the Racket documentation.
 ;     Sample solution is 6 lines.
 (define (list-nth-mod xs n)
-  (cond ([(< n 0) (error "list-nth-mod: negative number")]
-         [(= xs null) (error "list-nth-mod: empty list")]
-         [#t 
+  (letrec ([ith (lambda (list i) 
+               (car (list-tail list i)))])
+  (cond  [(< n 0) (error "list-nth-mod: negative number")]
+         [(empty? xs) (error "list-nth-mod: empty list")]
+         [#t (ith xs (remainder n (length xs)))])))
