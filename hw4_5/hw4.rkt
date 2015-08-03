@@ -45,6 +45,11 @@
          [#t (ith xs (remainder n (length xs)))])))
 
 
+(define (f x) (cons x (lambda () (f (+ x 1)))))
+
+(define nats (lambda () (f 1)))
+
+
 ;  4. Write a function stream-for-n-steps that takes a stream s and a number n.
 ;     It returns a list holding the first n values produced by s in order. 
 ;     Assume n is non-negative. Sample solution: 5 lines. Note: You can test
@@ -64,9 +69,12 @@
 ;     be a number and the cdr will be another stream.
 (define funny-number-stream 
   (letrec ([f (lambda (x) (if (= (remainder x 5) 0) 
-                              (cons (- x) (lambda () f (+ (abs x) 1)))
-                              (cons x (lambda () f (+ x 1)))))])
+                              (cons (- x) (lambda () (f (+ (abs x) 1))))
+                              (cons x (lambda () (f (+ x 1))))))])
     (lambda () (f 1))))
+
+
+;  6. Write a stream 'dan-then-dog', where
 
 
 
