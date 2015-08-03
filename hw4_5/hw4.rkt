@@ -43,3 +43,57 @@
   (cond  [(< n 0) (error "list-nth-mod: negative number")]
          [(empty? xs) (error "list-nth-mod: empty list")]
          [#t (ith xs (remainder n (length xs)))])))
+
+
+;  4. Write a function stream-for-n-steps that takes a stream s and a number n.
+;     It returns a list holding the first n values produced by s in order. 
+;     Assume n is non-negative. Sample solution: 5 lines. Note: You can test
+;     your streams with this function instead of the graphics code. 
+(define (stream-for-n-steps s n)
+  (letrec ([f (lambda (stream acc)
+              (if (= acc n)
+                 null   
+                 (cons (car (stream)) (f (cdr (stream)) (+ acc 1)))))])
+  (f s 0)))
+
+
+;  5. Write a stream 'funny-number-stream' that is like the stream of natural
+;     numbers (i.e., 1, 2, 3, ...) except numbers divisible by 5 are negated
+;     (i.e., 1, 2, 3, 4, -5, 6, 7, 8, 9, -10, 11 ...). Remember a stream is 
+;     a thunk that when called produces a pair. Here the car of the pair will
+;     be a number and the cdr will be another stream.
+(define funny-number-stream 
+  (letrec ([f (lambda (x) (if (= (remainder x 5) 0) 
+                              (cons (- x) (lambda () f (+ (abs x) 1)))
+                              (cons x (lambda () f (+ x 1)))))])
+    (lambda () (f 1))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
