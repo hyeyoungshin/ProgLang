@@ -154,7 +154,7 @@
 (define (Multiply? x) (eq? (car x) 'Multiply))
 
 ; just helper functions that extracts the underlying value for 
-; "one kind of exp"
+; "one kind of exp" (the local helper in ML)
 ; note: more robust could check "what kind of exp"
 (define (Const-int e) (car (cdr e)))
 (define (Negate-e e) (car (cdr e)))
@@ -175,8 +175,26 @@
 ; one change from what we did before: returning an exp, in particular
 ; a Constant, rather than an int
 (define (eval-exp e)
-  (cond [(Const? e) e]
-        [(Negate? e) (Const (- 
+  (cond [(Const? e) e] ; note: returning an exp, not a number
+        [(Negate? e) (Const (- (Const-int (eval-exp (Negate-e e)))))]
+        [(Add? e) (let ([v1 (Const-int (eval-exp (Add-e1 e)))]
+                        [v2 (Const-int (eval-exp (Add-e2 e)))])
+                    (Const (+ v1 v2)))]
+        [(Multiply? e) (let ([v1 (Const-int (eval-exp (Multiply-e1 e)))]
+                             [v2 (Const-int (eval-exp (Multiply-e2 e)))])
+                         (Const (* v1 v2)))]
+        [#t (error "eval-exp expected an exp")]))
+
+
+
+
+
+; Optional: Symbols
+
+;  Will not focus on Racket symbols like 'foo, but in brief:
+;    - Syntactically start with quote character
+;    - Like strings, can be almost any character sequence
+;    - Unlike strings, compare two symbols with eq? which is fast
 
 
 
